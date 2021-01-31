@@ -58,6 +58,7 @@ jobs:
         run: |
           cd ec-cube
           composer install --no-progress --prefer-dist --optimize-autoloader
+          composer require liip/imagine-bundle
 
       - name: Setup EC-CUBE
         run: |
