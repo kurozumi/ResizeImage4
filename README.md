@@ -6,3 +6,26 @@
 
 本プラグインを導入したことによる不具合や被った不利益につきましては一切責任を負いません。
 ご理解の程よろしくお願いいたします。
+
+## Example
+
+商品一覧ページの画像を250*250pxにリサイズしたい場合。
+```
+<img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') | imagine_filter('resize', {
+    "thumbnail": {"size": [250, 250] }}
+) }}">
+```
+
+商品一覧ページの画像をトリミングしてリサイズしたい場合。※デフォルトはトリミングするので省略可
+```
+<img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') | imagine_filter('resize', {
+    "thumbnail": {"size": [250, 250], "mode": "outbound" }}
+) }}">
+```
+
+商品一覧ページの画像をトリミングせず、相対的なサイズに変更したい場合
+```
+<img src="{{ asset(Product.main_list_image|no_image_product, 'save_image') | imagine_filter('resize', {
+    "thumbnail": {"size": [250, 250], "mode": "inset" }}
+) }}">
+```
