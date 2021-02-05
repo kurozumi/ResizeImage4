@@ -29,3 +29,12 @@
     "thumbnail": {"size": [250, 250], "mode": "inset" }}
 ) }}">
 ```
+
+
+## 独自プラグインでインストールする場合
+
+以下のライブラリをインストールしてください。
+
+```
+composer require liip/imagine-bundle
+```
