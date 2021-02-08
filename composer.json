@@ -5,7 +5,8 @@
   "type": "eccube-plugin",
   "require": {
     "ec-cube/plugin-installer": "~0.0.7",
-    "liip/imagine-bundle": "^2.4"
+    "liip/imagine-bundle": "^2.4",
+    "aws/aws-sdk-php": "^3.0"
   },
   "extra": {
     "code": "ResizeImage4"
