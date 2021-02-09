@@ -15,11 +15,13 @@ namespace Plugin\ResizeImage4\Form\Type\Admin;
 
 use Eccube\Form\Type\ToggleSwitchType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class AmazonS3Type extends AbstractType
 {
@@ -39,8 +41,13 @@ class AmazonS3Type extends AbstractType
             ->add('region', TextType::class, [
                 'required' => false
             ])
-            ->add('cache_control', TextType::class, [
-                'required' => false
+            ->add('cache_control', NumberType::class, [
+                'required' => false,
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 1
+                    ])
+                ]
             ]);
 
         $builder
