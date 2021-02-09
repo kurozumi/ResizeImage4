@@ -56,10 +56,13 @@ class ConfigControllerTest extends AbstractAdminWebTestCase
         foreach($keys as $key) {
             $pattern = '/^(' . $key . ')=(.*)/m';
             if (preg_match($pattern, $env, $matches)) {
-                if($key === 'AWS_S3_CACHE_CONTROL') {
-                    self::assertEquals('dummy', $matches[2]);
-                } else {
-                    self::assertEquals(1, $matches[2]);
+                switch ($key) {
+                    case 'AWS_S3_ENABLED':
+                    case 'AWS_S3_CACHE_CONTROL':
+                        self::assertEquals(1, $matches[2]);
+                    default:
+                        self::assertEquals('dummy', $matches[2]);
+
                 }
             } else {
                 self::fail(sprintf("%sが見つかりませんでした。", $key));
