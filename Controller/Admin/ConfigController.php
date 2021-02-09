@@ -46,9 +46,13 @@ class ConfigController extends AbstractController
             'enabled' => (bool)getenv('AWS_S3_ENABLED'),
             'access_key_id' => getenv('AWS_ACCESS_KEY_ID'),
             'secret_access_key' => getenv('AWS_SECRET_ACCESS_KEY'),
-            'bucket' => getenv('AWS_S3_BUCKET')
+            'bucket' => getenv('AWS_S3_BUCKET'),
+            'region' => getenv('AWS_S3_REGION') ? getenv('AWS_S3_REGION') : $this->getParameter('aws_s3_region'),
+            'cache_control' => getenv('AWS_S3_CACHE_CONTROL') ? getenv('AWS_S3_CACHE_CONTROL') : $this->getParameter('aws_s3_cache_control')
         ]);
         $form->handleRequest($request);
+
+        var_dump($this->getParameter('aws_s3_cache_control'));
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
@@ -60,7 +64,9 @@ class ConfigController extends AbstractController
                     'AWS_S3_ENABLED' => (int)$data['enabled'],
                     'AWS_ACCESS_KEY_ID' => $data['access_key_id'],
                     'AWS_SECRET_ACCESS_KEY' => $data['secret_access_key'],
-                    'AWS_S3_BUCKET' => $data['bucket']
+                    'AWS_S3_BUCKET' => $data['bucket'],
+                    'AWS_S3_REGION' => $data['region'],
+                    'AWS_S3_CACHE_CONTROL' => $data['cache_control']
                 ]);
                 file_put_contents($envFile, $env);
             }

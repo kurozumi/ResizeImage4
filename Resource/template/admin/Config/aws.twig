@@ -44,10 +44,24 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-3"><span>{{ 'バケット'|trans }}</span></div>
+                                <div class="col-3"><span>{{ 'Bucket'|trans }}</span></div>
                                 <div class="col mb-2">
                                     {{ form_widget(form.bucket) }}
                                     {{ form_errors(form.bucket) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"><span>{{ 'Region'|trans }}</span></div>
+                                <div class="col mb-2">
+                                    {{ form_widget(form.region) }}
+                                    {{ form_errors(form.region) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"><span>{{ 'CacheControl'|trans }}</span></div>
+                                <div class="col mb-2">
+                                    {{ form_widget(form.cache_control) }}
+                                    {{ form_errors(form.cache_control) }}
                                 </div>
                             </div>
                         </div>

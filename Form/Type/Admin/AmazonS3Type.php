@@ -35,6 +35,12 @@ class AmazonS3Type extends AbstractType
             ])
             ->add('bucket', TextType::class, [
                 'required' => false
+            ])
+            ->add('region', TextType::class, [
+                'required' => false
+            ])
+            ->add('cache_control', TextType::class, [
+                'required' => false
             ]);
 
         $builder
@@ -55,6 +61,14 @@ class AmazonS3Type extends AbstractType
 
                 if (null === $form->get('bucket')->getData()) {
                     $form->get('bucket')->addError(new FormError('入力してください。'));
+                }
+
+                if (null === $form->get('region')->getData()) {
+                    $form->get('region')->addError(new FormError('入力してください。'));
+                }
+
+                if (null === $form->get('cache_control')->getData()) {
+                    $form->get('cache_control')->addError(new FormError('入力してください。'));
                 }
             });
     }

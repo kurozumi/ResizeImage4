@@ -12,6 +12,11 @@
 parameters:
   env(AWS_S3_ENABLED): 0
   env(AWS_S3_BUCKET): ''
+  env(AWS_S3_REGION): 'ap-northeast-1'
+  env(AWS_S3_CACHE_CONTROL): '86400'
+
+  aws_s3_region: '%env(AWS_S3_REGION)%'
+  aws_s3_cache_control: '%env(AWS_S3_CACHE_CONTROL)%'
 
 liip_imagine:
   resolvers:
@@ -29,7 +34,7 @@ liip_imagine:
         get_options:
           Scheme: https
         put_options:
-          CacheControl: "max-age=86400"
+          CacheControl: "max-age=%env(AWS_S3_CACHE_CONTROL)%"
 
   loaders:
     default:
