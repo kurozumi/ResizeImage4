@@ -22,7 +22,7 @@ liip_imagine:
 
     aws_s3_resolver:
       aws_s3:
-        bucket: '%env(AWS_S3_BUCKET)%' #バケット名を設定してください
+        bucket: '%env(AWS_S3_BUCKET)%'
         client_config:
           version: '2006-03-01'
           region: 'ap-northeast-1'
@@ -41,4 +41,4 @@ liip_imagine:
 
     # the name of the "filter set"
     resize:
-      # cache: aws_s3_resolver # AWS S3を利用したい場合コメントアウトしてください
+      # cache: aws_s3_resolver
