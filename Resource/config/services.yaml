@@ -9,6 +9,10 @@
 # file that was distributed with this source code.
 #
 
+parameters:
+  env(AWS_S3_ENABLED): 0
+  env(AWS_S3_BUCKET): ''
+
 liip_imagine:
   resolvers:
     default:
@@ -18,7 +22,7 @@ liip_imagine:
 
     aws_s3_resolver:
       aws_s3:
-        bucket: 'bucket_name' #バケット名を設定してください
+        bucket: '%env(AWS_S3_BUCKET)%' #バケット名を設定してください
         client_config:
           version: '2006-03-01'
           region: 'ap-northeast-1'
