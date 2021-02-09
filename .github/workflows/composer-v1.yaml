@@ -77,6 +77,7 @@ jobs:
           composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
           composer require --dev kiy0taka/eccube4-test-fixer
           composer require liip/imagine-bundle
+          composer require aws/aws-sdk-php
 
       - name: Setup EC-CUBE
         run: |
