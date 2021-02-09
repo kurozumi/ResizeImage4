@@ -52,8 +52,6 @@ class ConfigController extends AbstractController
         ]);
         $form->handleRequest($request);
 
-        var_dump($this->getParameter('aws_s3_cache_control'));
-
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
