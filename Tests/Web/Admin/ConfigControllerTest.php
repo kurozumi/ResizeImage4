@@ -60,6 +60,7 @@ class ConfigControllerTest extends AbstractAdminWebTestCase
                     case 'AWS_S3_ENABLED':
                     case 'AWS_S3_CACHE_CONTROL':
                         self::assertEquals(1, $matches[2]);
+                        break;
                     default:
                         self::assertEquals('dummy', $matches[2]);
 
