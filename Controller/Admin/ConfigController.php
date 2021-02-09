@@ -13,7 +13,6 @@
 namespace Plugin\ResizeImage4\Controller\Admin;
 
 
-use Dotenv\Dotenv;
 use Eccube\Controller\AbstractController;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\StringUtil;
@@ -40,8 +39,6 @@ class ConfigController extends AbstractController
      */
     public function aws(Request $request, CacheUtil $cacheUtil)
     {
-        (new Dotenv($this->getParameter('kernel.project_dir')))->load();
-
         $form = $this->createForm(AmazonS3Type::class, [
             'enabled' => (bool)getenv('AWS_S3_ENABLED'),
             'access_key_id' => getenv('AWS_ACCESS_KEY_ID'),

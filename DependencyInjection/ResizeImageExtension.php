@@ -13,7 +13,6 @@
 namespace Plugin\ResizeImage4\DependencyInjection;
 
 
-use Dotenv\Dotenv;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -27,8 +26,6 @@ class ResizeImageExtension extends Extension implements PrependExtensionInterfac
         if (!in_array('ResizeImage4', $plugins)) {
             return;
         }
-
-        (new Dotenv($container->getParameter('kernel.project_dir')))->load();
 
         $extensionConfigsRefl = new \ReflectionProperty(ContainerBuilder::class, 'extensionConfigs');
         $extensionConfigsRefl->setAccessible(true);
