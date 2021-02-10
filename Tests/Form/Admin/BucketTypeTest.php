@@ -7,7 +7,7 @@ namespace Plugin\ResizeImage4\Tests\Form\Admin;
 use Eccube\Tests\Form\Type\AbstractTypeTestCase;
 use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\BucketType;
 
-class AmazonS3TypeTest extends AbstractTypeTestCase
+class BucketTypeTest extends AbstractTypeTestCase
 {
     protected $form;
 
