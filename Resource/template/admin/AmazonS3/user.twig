@@ -1,6 +1,6 @@
 {% extends '@admin/default_frame.twig' %}
 
-{% set menus = ['resize_iamge_config', 'amazon_s3_config'] %}
+{% set menus = ['resize_iamge_config', 'resize_iamge_config_amazon_s3'] %}
 
 {% block title %}{{ 'Amazon S3連携設定'|trans }}{% endblock %}
 {% block sub_title %}{{ '画像リサイズ'|trans }}{% endblock %}
@@ -23,13 +23,6 @@
                         <div class="card-header"><span>{{ '設定'|trans }}</span></div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-3"><span>{{ '有効化'|trans }}</span></div>
-                                <div class="col mb-2">
-                                    {{ form_widget(form.enabled) }}
-                                    {{ form_errors(form.enabled) }}
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-3"><span>{{ 'Access key ID'|trans }}</span></div>
                                 <div class="col mb-2">
                                     {{ form_widget(form.access_key_id) }}
@@ -44,24 +37,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-3"><span>{{ 'Bucket'|trans }}</span></div>
-                                <div class="col mb-2">
-                                    {{ form_widget(form.bucket) }}
-                                    {{ form_errors(form.bucket) }}
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-3"><span>{{ 'Region'|trans }}</span></div>
                                 <div class="col mb-2">
                                     {{ form_widget(form.region) }}
                                     {{ form_errors(form.region) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-3"><span>{{ 'CacheControl'|trans }}</span></div>
-                                <div class="col mb-2">
-                                    {{ form_widget(form.cache_control) }}
-                                    {{ form_errors(form.cache_control) }}
                                 </div>
                             </div>
                         </div>
@@ -73,7 +52,13 @@
             <div class="c-conversionArea__container">
                 <div class="row justify-content-between align-items-center">
                     <div class="col-6">
-                        <div class="c-conversionArea__leftBlockItem"></div>
+                        <div class="c-conversionArea__leftBlockItem">
+                            <a class="c-baseLink"
+                               href="{{ url('admin_resize_image_amazon_s3') }}">
+                                <i class="fa fa-backward" aria-hidden="true"></i>
+                                <span>{{ '連携設定'|trans }}</span>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-6">
                         <div class="row align-items-center justify-content-end">

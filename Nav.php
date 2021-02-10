@@ -25,9 +25,9 @@ class Nav implements EccubeNav
                 'name' => '画像リサイズ管理',
                 'icon' => 'fa-picture-o',
                 'children' => [
-                    'amazon_s3_config' => [
+                    'resize_iamge_config_amazon_s3' => [
                         'name' => 'Amazon S3連携設定',
-                        'url' => 'admin_resize_image_config_aws'
+                        'url' => 'admin_resize_image_amazon_s3'
                     ]
                 ]
             ]
