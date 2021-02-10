@@ -59,40 +59,13 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
         $fs->rename($envFile . '.backup', $envFile, true);
     }
 
-    public function testバケットページで情報を保存したらenvファイルに追記されるか()
-    {
-        $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
-
-        $fs = new Filesystem();
-        $fs->copy($envFile, $envFile . '.backup');
-
-        $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3_bucket'), [
-            'amazon_s3' => [
-                'bucket' => 'dummy',
-                Constant::TOKEN_NAME => 'dummy'
-            ]
-        ]);
-
-        $env = file_get_contents($envFile);
-
-        $keys = [
-            'AWS_S3_BUCKET',
-        ];
-
-        foreach ($keys as $key) {
-            $pattern = '/^(' . $key . ')=(.*)/m';
-            if (preg_match($pattern, $env, $matches)) {
-                self::assertEquals(1, $matches[2]);
-            } else {
-                self::fail(sprintf("%sが見つかりませんでした。", $key));
-            }
-        }
-
-        $fs->rename($envFile . '.backup', $envFile, true);
-    }
-
     public function test設定ページで情報を保存したらenvファイルに追記されるか()
     {
+        putenv('AWS_ACCESS_KEY_ID', 'dummy');
+        putenv('AWS_SECRET_ACCESS_KEY', 'dummy');
+        putenv('AWS_S3_REGION', 'dummy');
+        putenv('AWS_S3_BUCKET', 'dummy');
+
         $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
 
         $fs = new Filesystem();
