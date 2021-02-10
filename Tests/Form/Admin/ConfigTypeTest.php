@@ -28,24 +28,10 @@ class ConfigTypeTest extends AbstractTypeTestCase
             ])
             ->getForm();
 
-        $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
-
-        $fs = new Filesystem();
-        $fs->copy($envFile, $envFile . '.backup');
-
-        if (file_exists($envFile)) {
-            $env = file_get_contents($envFile);
-            $env = StringUtil::replaceOrAddEnv($env, [
-                'AWS_S3_ENABLED' => 0,
-                'AWS_ACCESS_KEY_ID' => 'dummy',
-                'AWS_SECRET_ACCESS_KEY' => 'dummy',
-                'AWS_S3_REGION' => 'dummy',
-                'AWS_S3_BUCKET' => 'dummy',
-            ]);
-            file_put_contents($envFile, $env);
-        }
-
-        $fs->rename($envFile . '.backup', $envFile, true);
+        putenv('AWS_ACCESS_KEY_ID', 'dummy');
+        putenv('AWS_SECRET_ACCESS_KEY', 'dummy');
+        putenv('AWS_S3_REGION', 'dummy');
+        putenv('AWS_S3_BUCKET', 'dummy');
     }
 
     public function tearDown()
