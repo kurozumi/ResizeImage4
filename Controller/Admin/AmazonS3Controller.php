@@ -92,9 +92,15 @@ class AmazonS3Controller extends AbstractController
             return $this->redirectToRoute('admin_resize_image_amazon_s3_user');
         }
 
-        $form = $this->createForm(BucketType::class, [
-            'bucket' => getenv('AWS_S3_BUCKET')
-        ]);
+        try {
+            $form = $this->createForm(BucketType::class, [
+                'bucket' => getenv('AWS_S3_BUCKET')
+            ]);
+        } catch (\Exception $e) {
+            $this->addError('設定に誤りがあります', 'admin');
+            return $this->redirectToRoute('admin_resize_image_amazon_s3_user');
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
