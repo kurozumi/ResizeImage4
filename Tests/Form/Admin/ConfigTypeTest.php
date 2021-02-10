@@ -28,10 +28,10 @@ class ConfigTypeTest extends AbstractTypeTestCase
             ])
             ->getForm();
 
-        putenv('AWS_ACCESS_KEY_ID', 'dummy');
-        putenv('AWS_SECRET_ACCESS_KEY', 'dummy');
-        putenv('AWS_S3_REGION', 'dummy');
-        putenv('AWS_S3_BUCKET', 'dummy');
+        putenv('AWS_ACCESS_KEY_ID=dummy');
+        putenv('AWS_SECRET_ACCESS_KEY=dummy');
+        putenv('AWS_S3_REGION=dummy');
+        putenv('AWS_S3_BUCKET=dummy');
     }
 
     public function tearDown()

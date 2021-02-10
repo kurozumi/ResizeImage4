@@ -61,10 +61,10 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
 
     public function test設定ページで情報を保存したらenvファイルに追記されるか()
     {
-        putenv('AWS_ACCESS_KEY_ID', 'dummy');
-        putenv('AWS_SECRET_ACCESS_KEY', 'dummy');
-        putenv('AWS_S3_REGION', 'dummy');
-        putenv('AWS_S3_BUCKET', 'dummy');
+        putenv('AWS_ACCESS_KEY_ID=dummy');
+        putenv('AWS_SECRET_ACCESS_KEY=dummy');
+        putenv('AWS_S3_REGION=dummy');
+        putenv('AWS_S3_BUCKET=dummy');
 
         $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
 
