@@ -16,14 +16,27 @@ namespace Plugin\ResizeImage4\Form\Type\Admin\AmazonS3;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('access_key_id', TextType::class)
-            ->add('secret_access_key', TextType::class)
-            ->add('region', TextType::class);
+            ->add('access_key_id', TextType::class, [
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
+            ->add('secret_access_key', TextType::class, [
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
+            ->add('region', TextType::class, [
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ]);
     }
 }

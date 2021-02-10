@@ -72,7 +72,7 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
         $fs->copy($envFile, $envFile . '.backup');
 
         $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3'), [
-            'amazon_s3' => [
+            'config' => [
                 'enabled' => true,
                 'cache_control' => 1,
                 Constant::TOKEN_NAME => 'dummy'

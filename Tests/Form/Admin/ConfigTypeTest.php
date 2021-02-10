@@ -5,9 +5,7 @@ namespace Plugin\ResizeImage4\Tests\Form\Admin;
 
 
 use Eccube\Tests\Form\Type\AbstractTypeTestCase;
-use Eccube\Util\StringUtil;
 use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\ConfigType;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigTypeTest extends AbstractTypeTestCase
 {
@@ -48,6 +46,7 @@ class ConfigTypeTest extends AbstractTypeTestCase
     public function testS3有効の場合は他の項目が空だとエラー()
     {
         $this->formData['enabled'] = true;
+        $this->formData['cache_control'] = '';
         $this->form->submit($this->formData);
         self::assertFalse($this->form->isValid());
     }
