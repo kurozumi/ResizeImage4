@@ -34,14 +34,14 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-3"><span>{{ '有効化'|trans }}</span></div>
-                                <div class="col mb-4">
+                                <div class="col mb-2">
                                     {{ form_widget(form.enabled) }}
                                     {{ form_errors(form.enabled) }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-3"><span>{{ 'アクセスユーザー'|trans }}</span></div>
-                                <div class="col mb-4">
+                                <div class="col mb-2">
                                     {% if access_key_id %}
                                         <p><b>{{ access_key_id }}</b></p>
                                         <p><a href="{{ url('admin_resize_image_amazon_s3_user') }}">アクセスユーザーを切り替える</a>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-3"><span>{{ 'バケット'|trans }}</span></div>
-                                <div class="col mb-4">
+                                <div class="col mb-2">
                                     {% if bucket %}
                                     <p><b>{{ bucket }}</b></p>
                                     {% endif %}
@@ -63,7 +63,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-3"><span>{{ 'Cache-Control'|trans }}</span></div>
-                                <div class="col mb-4">
+                                <div class="col mb-2">
                                     {{ form_widget(form.cache_control) }}
                                     {{ form_errors(form.cache_control) }}
                                 </div>
