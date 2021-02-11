@@ -47,4 +47,4 @@ composer require liip/imagine-bundle
 composer require aws/aws-sdk-php
 ```
 
-管理画面＞画像リサイズ管理＞Amazon S3連携設定で有効化して、必要な情報を設定してください。
+管理画面＞画像リサイズ管理＞Amazon S3連携設定で必要な情報を設定して有効化ください。
