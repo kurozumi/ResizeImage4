@@ -86,7 +86,7 @@ class AmazonS3Controller extends AbstractController
                 return $bucket['Name'];
             }, $buckets['Buckets']);
         } catch (\Exception $e) {
-            $this->addError('設定に誤りがあります', 'admin');
+            $this->addError('AWS アクセスキーを設定してください', 'admin');
             return $this->redirectToRoute('admin_resize_image_amazon_s3_user');
         }
 

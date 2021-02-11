@@ -53,7 +53,7 @@ class ConfigType extends AbstractType
                     !getenv('AWS_SECRET_ACCESS_KEY') ||
                     !getenv('AWS_S3_REGION')
                 ) {
-                    $form->addError(new FormError('アクセスユーザーが設定されていないので有効化できません。'));
+                    $form->addError(new FormError('AWS アクセスキーが設定されていないので有効化できません。'));
                 }
 
                 if (

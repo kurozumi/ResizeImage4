@@ -40,14 +40,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-3"><span>{{ 'アクセスユーザー'|trans }}</span></div>
+                                <div class="col-3"><span>{{ 'AWS アクセスキー'|trans }}</span></div>
                                 <div class="col mb-2">
                                     {% if access_key_id %}
                                         <p><b>{{ access_key_id }}</b></p>
-                                        <p><a href="{{ url('admin_resize_image_amazon_s3_user') }}">アクセスユーザーを切り替える</a>
+                                        <p><a href="{{ url('admin_resize_image_amazon_s3_user') }}">AWS アクセスキーを変更する</a>
                                         </p>
                                     {% else %}
-                                        <p><a href="{{ url('admin_resize_image_amazon_s3_user') }}">アクセスユーザーを登録する</a>
+                                        <p><a href="{{ url('admin_resize_image_amazon_s3_user') }}">AWS アクセスキーを登録する</a>
                                         </p>
                                     {% endif %}
                                 </div>
