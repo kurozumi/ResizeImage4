@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * This file is part of ResizeImage4
+ *
+ * Copyright(c) Akira Kurozumi <info@a-zumi.net>
+ *
+ * https://a-zumi.net
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Plugin\ResizeImage4\Tests\Form\Admin;
 
@@ -9,8 +18,14 @@ use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\ConfigType;
 
 class ConfigTypeTest extends AbstractTypeTestCase
 {
+    /**
+     * @var \Symfony\Component\Form\FormInterface
+     */
     protected $form;
 
+    /**
+     * @var array
+     */
     protected $formData = [
         'enabled' => true,
         'cache_control' => 86400

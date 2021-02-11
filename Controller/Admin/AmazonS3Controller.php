@@ -13,6 +13,7 @@
 namespace Plugin\ResizeImage4\Controller\Admin;
 
 
+use Aws\S3\S3Client;
 use Eccube\Controller\AbstractController;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\StringUtil;
@@ -51,16 +52,11 @@ class AmazonS3Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $envFile = $this->getParameter('kernel.project_dir') . DIRECTORY_SEPARATOR . '.env';
-            if (file_exists($envFile)) {
-                $env = file_get_contents($envFile);
-                $env = StringUtil::replaceOrAddEnv($env, [
-                    'AWS_ACCESS_KEY_ID' => $data['access_key_id'],
-                    'AWS_SECRET_ACCESS_KEY' => $data['secret_access_key'],
-                    'AWS_S3_REGION' => $data['region']
-                ]);
-                file_put_contents($envFile, $env);
-            }
+            $this->replaceOrAddEnv([
+                'AWS_ACCESS_KEY_ID' => $data['access_key_id'],
+                'AWS_SECRET_ACCESS_KEY' => $data['secret_access_key'],
+                'AWS_S3_REGION' => $data['region']
+            ]);
 
             $cacheUtil->clearCache();
 
@@ -82,38 +78,31 @@ class AmazonS3Controller extends AbstractController
      * @Route("/bucket", name="admin_resize_image_amazon_s3_bucket")
      * @Template("@ResizeImage4/admin/AmazonS3/bucket.twig")
      */
-    public function bucket(Request $request, CacheUtil $cacheUtil)
+    public function bucket(Request $request, CacheUtil $cacheUtil, S3Client $client)
     {
-        if (
-            !getenv('AWS_ACCESS_KEY_ID') ||
-            !getenv('AWS_SECRET_ACCESS_KEY') ||
-            !getenv('AWS_S3_REGION')
-        ) {
-            return $this->redirectToRoute('admin_resize_image_amazon_s3_user');
-        }
-
         try {
-            $form = $this->createForm(BucketType::class, [
-                'bucket' => getenv('AWS_S3_BUCKET')
-            ]);
+            $buckets = $client->listBuckets();
+            $buckets = array_map(function ($bucket) {
+                return $bucket['Name'];
+            }, $buckets['Buckets']);
         } catch (\Exception $e) {
             $this->addError('設定に誤りがあります', 'admin');
             return $this->redirectToRoute('admin_resize_image_amazon_s3_user');
         }
+
+        $options['buckets'] = array_combine($buckets, $buckets);
+        $form = $this->createForm(BucketType::class, [
+            'bucket' => getenv('AWS_S3_BUCKET')
+        ], $options);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $envFile = $this->getParameter('kernel.project_dir') . DIRECTORY_SEPARATOR . '.env';
-            if (file_exists($envFile)) {
-                $env = file_get_contents($envFile);
-                $env = StringUtil::replaceOrAddEnv($env, [
-                    'AWS_S3_BUCKET' => $data['bucket'],
-                ]);
-                file_put_contents($envFile, $env);
-            }
+            $this->replaceOrAddEnv([
+                'AWS_S3_BUCKET' => $data['bucket']
+            ]);
 
             $cacheUtil->clearCache();
 
@@ -146,15 +135,10 @@ class AmazonS3Controller extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $envFile = $this->getParameter('kernel.project_dir') . DIRECTORY_SEPARATOR . '.env';
-            if (file_exists($envFile)) {
-                $env = file_get_contents($envFile);
-                $env = StringUtil::replaceOrAddEnv($env, [
-                    'AWS_S3_ENABLED' => (int)$data['enabled'],
-                    'AWS_S3_CACHE_CONTROL' => $data['cache_control'],
-                ]);
-                file_put_contents($envFile, $env);
-            }
+            $this->replaceOrAddEnv([
+                'AWS_S3_ENABLED' => (int)$data['enabled'],
+                'AWS_S3_CACHE_CONTROL' => $data['cache_control']
+            ]);
 
             $cacheUtil->clearCache();
 
@@ -168,5 +152,15 @@ class AmazonS3Controller extends AbstractController
             'access_key_id' => getenv('AWS_ACCESS_KEY_ID'),
             'bucket' => getenv('AWS_S3_BUCKET')
         ];
+    }
+
+    private function replaceOrAddEnv(array $replacement)
+    {
+        $envFile = $this->getParameter('kernel.project_dir') . DIRECTORY_SEPARATOR . '.env';
+        if (file_exists($envFile)) {
+            $env = file_get_contents($envFile);
+            $env = StringUtil::replaceOrAddEnv($env, $replacement);
+            file_put_contents($envFile, $env);
+        }
     }
 }
