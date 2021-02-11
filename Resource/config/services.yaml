@@ -52,7 +52,7 @@ liip_imagine:
 
 services:
   Aws\S3\S3Client:
-    factory: ['@Plugin\ResizeImage4\Factory\AmazonS3ClientFactory', 'create']
+    factory: ['Plugin\ResizeImage4\Factory\AmazonS3ClientFactory', 'create']
     arguments:
       -
         version: '%aws_s3_version%'
