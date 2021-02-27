@@ -48,11 +48,6 @@ jobs:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          path: app/Plugin/${{ github.event.repository.name }}
-
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
@@ -80,12 +75,18 @@ jobs:
           composer require liip/imagine-bundle
           composer require aws/aws-sdk-php
 
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: app/Plugin/${{ github.event.repository.name }}
+        run: composer -V
+
       - name: Setup EC-CUBE and Plugin
         run: |
           composer compile
-          bin/console eccube:plugin:install --path=$HOME/${{ github.event.repository.name }}.tar.gz
+          bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
           bin/console cache:clear --no-warmup
-          bin/console eccube:plugin:enable --code=${{ github.event.repository.name }}
+          bin/console eccube:plugin:enable --code ${{ github.event.repository.name }}
         env:
           DATABASE_URL: ${{ matrix.database_url }}
           DATABASE_SERVER_VERSION: ${{ matrix.database_server_version }}
