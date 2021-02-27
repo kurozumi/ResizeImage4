@@ -48,7 +48,16 @@ jobs:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
+      - name: Setup PHP, with composer v1 and extensions
+        if: matrix.eccube-versions == '4.0'
+        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, mysql, intl
+          tools: composer:v1
+
       - name: Setup PHP, with composer and extensions
+        if: matrix.eccube-versions != '4.0'
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-versions }}
@@ -70,7 +79,7 @@ jobs:
 
       - name: Install Composer dependencies
         run : |
-          composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+          composer install --no-progress --prefer-dist --optimize-autoloader
           composer require --dev kiy0taka/eccube4-test-fixer
           composer require liip/imagine-bundle
           composer require aws/aws-sdk-php
@@ -79,9 +88,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: app/Plugin/${{ github.event.repository.name }}
-
-      - name: Show Composer Version
-        run: composer -V
 
       - name: Setup EC-CUBE and Plugin
         run: |
