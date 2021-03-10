@@ -49,7 +49,6 @@ jobs:
 
       - name: Setup EC-CUBE and Plugin
         run: |
-          composer compile
           bin/console e:i
           bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
           bin/console cache:clear --no-warmup
