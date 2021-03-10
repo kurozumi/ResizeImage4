@@ -63,13 +63,13 @@ jobs:
         with:
           python-version: '3.7'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           cd app/Plugin/${{ github.event.repository.name }}
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: E2ETest
+      - name: E2E Test
         run: |
           cd app/Plugin/${{ github.event.repository.name }}/selenium
           python -m unittest discover -v
