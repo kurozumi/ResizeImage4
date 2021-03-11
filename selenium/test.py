@@ -9,7 +9,7 @@ class E2ETest(unittest.TestCase):
         options = Options()
         options.add_argument('--headless')
         self.driver = webdriver.Chrome(options=options)
-        self.driver.implicitly_wait(30)
+        self.wait = WebDriverWait(self.driver, 10)
 
     def tearDown(self):
         self.driver.close()
