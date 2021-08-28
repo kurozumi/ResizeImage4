@@ -9,7 +9,6 @@ jobs:
       matrix:
         eccube-versions: ['4.0','4.1']
         php-versions: [7.1,7.2,7.3,7.4]
-        composer: ['v1', 'v2']
         database: [mysql, pgsql]
         include:
           - database: mysql
@@ -48,7 +47,7 @@ jobs:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
-      - name: Setup PHP, with composer v1 and extensions
+      - name: Setup PHP, with composer v1 and extensions for EC-CUBE4.0
         if: matrix.eccube-versions == '4.0'
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
@@ -62,7 +61,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:${{ matrix.composer }}
+          tools: composer:v2
 
       - name: Get composer cache directory
         id: composer-cache
@@ -80,9 +79,13 @@ jobs:
       - name: Install Composer dependencies
         run : |
           composer install --no-progress --prefer-dist --optimize-autoloader
-          composer require --dev kiy0taka/eccube4-test-fixer
           composer require liip/imagine-bundle
-          composer require aws/aws-sdk-php
+          composer require aws/aws-sdk-php:^3.0
+
+      - name: Install Composer dependencies for EC-CUBE4.0
+        if: matrix.eccube-versions == '4.0'
+        run : |
+          composer require --dev kiy0taka/eccube4-test-fixer
 
       - name: Checkout
         uses: actions/checkout@v2

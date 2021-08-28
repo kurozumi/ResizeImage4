@@ -1,31 +1,36 @@
-name: E2E test for EC-CUBE4 Plugin
+name: PHPStan
 on: [workflow_dispatch, pull_request]
+env:
+  DATABASE_URL: mysql://root:root@127.0.0.1:3306/eccube_db
+  DATABASE_SERVER_VERSION: 5
+
 jobs:
-  selenium:
-    name: Selenium
+  phpstan:
+    name: PHPStan
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        eccube-versions: [ '4.0','4.1' ]
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_USER: root
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: eccube_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout EC-CUBE
         uses: actions/checkout@v2
         with:
           repository: EC-CUBE/ec-cube
-          ref: ${{ matrix.eccube-versions }}
-
-      - name: Setup PHP, with composer and extensions for EC-CUBE4.0
-        if: matrix.eccube-versions == '4.0'
-        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:v1
+          ref: 4.1
 
       - name: Setup PHP, with composer and extensions
-        if: matrix.eccube-versions != '4.0'
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
           php-version: 7.4
@@ -46,7 +51,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run : |
+        run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
           composer require liip/imagine-bundle
           composer require aws/aws-sdk-php:^3.0
@@ -58,26 +63,12 @@ jobs:
 
       - name: Setup EC-CUBE and Plugin
         run: |
-          bin/console e:i
+          composer compile
           bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
           bin/console cache:clear --no-warmup
           bin/console eccube:plugin:enable --code ${{ github.event.repository.name }}
 
-      - name: Start PHP Development Server
-        run: php -S localhost:8000 &
-
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7'
-
-      - name: Install Python dependencies
+      - name: PHPStan
         run: |
-          cd app/Plugin/${{ github.event.repository.name }}
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: E2E Test
-        run: |
-          cd app/Plugin/${{ github.event.repository.name }}/selenium
-          python -m unittest discover -v
+          composer require phpstan/phpstan --dev
+          vendor/bin/phpstan analyze app/Plugin/${{ github.event.repository.name }} -c "app/Plugin/${{ github.event.repository.name }}/phpstan.neon" --error-format=github
