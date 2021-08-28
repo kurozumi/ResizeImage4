@@ -80,6 +80,7 @@ jobs:
         run : |
           composer install --no-progress --prefer-dist --optimize-autoloader
           composer require liip/imagine-bundle
+          composer require aws/aws-sdk-php:^3.0
 
       - name: Install Composer dependencies for EC-CUBE4.0
         if: matrix.eccube-versions == '4.0'
