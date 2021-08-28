@@ -21,7 +21,7 @@ jobs:
         with:
           php-version: 7.4
           extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:v1
+          tools: composer:v2
 
       - name: Get composer cache directory
         id: composer-cache
