@@ -16,10 +16,19 @@ jobs:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
-      - name: Setup PHP, with composer and extensions
+      - name: Setup PHP, with composer and extensions for EC-CUBE4.0
+        if: matrix.eccube-versions == '4.0'
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
-          php-version: 7.4
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, mysql, intl
+          tools: composer:v1
+
+      - name: Setup PHP, with composer and extensions
+        if: matrix.eccube-versions != '4.0'
+        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
+        with:
+          php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, mysql, intl
           tools: composer:v2
 
