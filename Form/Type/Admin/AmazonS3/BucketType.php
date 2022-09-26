@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of ResizeImage4
+ * This file is part of ResizeImage42
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Plugin\ResizeImage4\Form\Type\Admin\AmazonS3;
+namespace Plugin\ResizeImage42\Form\Type\Admin\AmazonS3;
 
 
 use Symfony\Component\Form\AbstractType;

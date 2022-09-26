@@ -1,5 +1,5 @@
 #
-# This file is part of ResizeImage4
+# This file is part of ResizeImage42
 #
 # Copyright(c) Akira Kurozumi <info@a-zumi.net>
 #
@@ -52,7 +52,7 @@ liip_imagine:
 
 services:
   Aws\S3\S3Client:
-    factory: ['Plugin\ResizeImage4\Factory\AmazonS3ClientFactory', 'create']
+    factory: ['Plugin\ResizeImage42\Factory\AmazonS3ClientFactory', 'create']
     arguments:
       -
         version: '%aws_s3_version%'

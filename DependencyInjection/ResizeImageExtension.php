@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of ResizeImage4
+ * This file is part of ResizeImage42
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -10,7 +10,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Plugin\ResizeImage4\DependencyInjection;
+namespace Plugin\ResizeImage42\DependencyInjection;
 
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +23,7 @@ class ResizeImageExtension extends Extension implements PrependExtensionInterfac
     {
         $plugins = $container->getParameter('eccube.plugins.enabled');
 
-        if (!in_array('ResizeImage4', $plugins)) {
+        if (!in_array('ResizeImage42', $plugins)) {
             return;
         }
 
@@ -46,6 +46,5 @@ class ResizeImageExtension extends Extension implements PrependExtensionInterfac
 
     public function load(array $configs, ContainerBuilder $container)
     {
-        // TODO: Implement load() method.
     }
 }

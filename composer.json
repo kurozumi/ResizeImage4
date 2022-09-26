@@ -1,14 +1,14 @@
 {
-    "name": "ec-cube/resizeimage4",
-    "version": "2.0.0",
-    "description": "画像リサイズプラグイン for EC-CUBE4",
+    "name": "ec-cube/resizeimage42",
+    "version": "4.2.0",
+    "description": "画像リサイズプラグイン for EC-CUBE4.2",
     "type": "eccube-plugin",
     "require": {
-        "ec-cube/plugin-installer": "~0.0.6 || ^2.0",
-        "liip/imagine-bundle": "^2.4",
-        "aws/aws-sdk-php": "^3.0"
+        "ec-cube/plugin-installer": "^2.0",
+        "liip/imagine-bundle": "^2.8",
+        "aws/aws-sdk-php": "^3.235"
     },
     "extra": {
-        "code": "ResizeImage4"
+        "code": "ResizeImage42"
     }
 }

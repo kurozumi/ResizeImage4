@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of ResizeImage4
+ * This file is part of ResizeImage42
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -10,23 +10,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Plugin\ResizeImage4\Controller\Admin;
+namespace Plugin\ResizeImage42\Controller\Admin;
 
 
 use Aws\S3\S3Client;
 use Eccube\Controller\AbstractController;
 use Eccube\Util\CacheUtil;
 use Eccube\Util\StringUtil;
-use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\BucketType;
-use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\ConfigType;
-use Plugin\ResizeImage4\Form\Type\Admin\AmazonS3\UserType;
+use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\BucketType;
+use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\ConfigType;
+use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class ConfigController
- * @package Plugin\ResizeImage4\Controller\Admin
+ * @package Plugin\ResizeImage42\Controller\Admin
  *
  * @Route("/%eccube_admin_route%/resize_image/amazon_s3")
  */
@@ -35,10 +36,10 @@ class AmazonS3Controller extends AbstractController
     /**
      * @param Request $request
      * @param CacheUtil $cacheUtil
-     * @return array
+     * @return array | RedirectResponse
      *
      * @Route("/user", name="admin_resize_image_amazon_s3_user")
-     * @Template("@ResizeImage4/admin/AmazonS3/user.twig")
+     * @Template("@ResizeImage42/admin/AmazonS3/user.twig")
      */
     public function user(Request $request, CacheUtil $cacheUtil)
     {
@@ -73,10 +74,10 @@ class AmazonS3Controller extends AbstractController
     /**
      * @param Request $request
      * @param CacheUtil $cacheUtil
-     * @return array
+     * @return array | RedirectResponse
      *
      * @Route("/bucket", name="admin_resize_image_amazon_s3_bucket")
-     * @Template("@ResizeImage4/admin/AmazonS3/bucket.twig")
+     * @Template("@ResizeImage42/admin/AmazonS3/bucket.twig")
      */
     public function bucket(Request $request, CacheUtil $cacheUtil, S3Client $client)
     {
@@ -119,10 +120,10 @@ class AmazonS3Controller extends AbstractController
     /**
      * @param Request $request
      * @param CacheUtil $cacheUtil
-     * @return array
+     * @return array | RedirectResponse
      *
      * @Route("", name="admin_resize_image_amazon_s3")
-     * @Template("@ResizeImage4/admin/AmazonS3/index.twig")
+     * @Template("@ResizeImage42/admin/AmazonS3/index.twig")
      */
     public function index(Request $request, CacheUtil $cacheUtil)
     {

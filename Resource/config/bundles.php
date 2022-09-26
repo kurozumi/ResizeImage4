@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of ResizeImage4
+ * This file is part of ResizeImage42
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
