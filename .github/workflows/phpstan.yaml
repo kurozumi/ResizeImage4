@@ -2,7 +2,6 @@ name: PHPStan
 on: [workflow_dispatch, pull_request]
 env:
   PLUGIN_CODE: ResizeImage42
-  PLUGIN_BRANCH: 4.2
 jobs:
   phpstan:
     name: PHPStan

@@ -1,5 +1,7 @@
 name: E2E test for EC-CUBE4 Plugin
 on: [workflow_dispatch, pull_request]
+env:
+  PLUGIN_CODE: ResizeImage42
 jobs:
   selenium:
     name: Selenium
@@ -42,7 +44,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          path: app/Plugin/${{ github.event.repository.name }}
+          path: app/Plugin/${{ env.PLUGIN_CODE }}
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup EC-CUBE and Plugin
