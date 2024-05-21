@@ -2,7 +2,7 @@ name: PHPStan
 on: [workflow_dispatch, pull_request]
 env:
   PLUGIN_CODE: ResizeImage42
-  PLUGIN_BRANCH: 4.2
+  WORKING_DIRECTORY: 'ec-cube'
 jobs:
   phpstan:
     name: PHPStan
@@ -28,6 +28,7 @@ jobs:
         with:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
+          path: ${{ env.WORKING_DIRECTORY }}
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
@@ -36,16 +37,18 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, mysql, intl, :xdebug
           tools: composer:v2
 
-      - name: Initialize Composer
-        uses: ./.github/actions/composer
-
       - name: Checkout
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         uses: actions/checkout@v3
         with:
           path: app/Plugin/${{ env.PLUGIN_CODE }}
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Initialize Composer
+        uses: ./.github/actions/composer
+
       - name: PHPStan
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           composer require phpstan/phpstan --dev
           ./vendor/bin/phpstan analyze app/Plugin/${{ env.PLUGIN_CODE }} -c "app/Plugin/${{ env.PLUGIN_CODE }}/phpstan.neon" --error-format=github

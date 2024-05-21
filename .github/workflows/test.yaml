@@ -2,7 +2,7 @@ name: CI/CD for EC-CUBE4 Plugin
 on: [ workflow_dispatch, pull_request ]
 env:
   PLUGIN_CODE: ResizeImage42
-  PACKAGE_NAME: 'ec-cube/purchaselimit42'
+  PACKAGE_NAME: 'ec-cube/resizeimage42'
   WORKING_DIRECTORY: 'ec-cube'
   APP_ENV: 'test'
   APP_DEBUG: 0
