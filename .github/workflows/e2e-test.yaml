@@ -27,7 +27,6 @@ jobs:
         with:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
-          path: ${{ env.WORKING_DIRECTORY }}
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
@@ -39,21 +38,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          path: ${{ env.WORKING_DIRECTORY }}/app/Plugin/${{ github.event.repository.name }}
+          path: app/Plugin/${{ github.event.repository.name }}
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Initialize Composer
-        uses: ./.github/actions/composer
+      - name: composer install
+        run: |
+          composer install --no-progress --prefer-dist --optimize-autoloader
+          composer require liip/imagine-bundle
+          composer require aws/aws-sdk-php
 
       - name: Setup EC-CUBE and Plugin
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           bin/console e:i
           bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
           bin/console eccube:plugin:enable --code ${{ github.event.repository.name }}
 
       - name: Start PHP Development Server
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: php -S localhost:8000 &
 
       - name: Set up Python 3.7
@@ -62,14 +62,12 @@ jobs:
           python-version: '3.7'
 
       - name: Install Python dependencies
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           cd app/Plugin/${{ github.event.repository.name }}
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: E2E Test
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           cd app/Plugin/${{ github.event.repository.name }}/selenium
           python -m unittest discover -v
