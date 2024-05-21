@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -12,13 +13,14 @@
 
 namespace Plugin\ResizeImage42;
 
-
 use Eccube\Common\EccubeNav;
 
 class Nav implements EccubeNav
 {
-
-    public static function getNav()
+    /**
+     * @return array[]
+     */
+    public static function getNav(): array
     {
         return [
             'resize_iamge_config' => [
@@ -27,10 +29,10 @@ class Nav implements EccubeNav
                 'children' => [
                     'resize_image_config_amazon_s3' => [
                         'name' => 'Amazon S3連携設定',
-                        'url' => 'admin_resize_image_amazon_s3'
-                    ]
-                ]
-            ]
+                        'url' => 'admin_resize_image_amazon_s3',
+                    ],
+                ],
+            ],
         ];
     }
 }

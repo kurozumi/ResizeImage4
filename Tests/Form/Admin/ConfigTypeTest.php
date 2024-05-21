@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -12,14 +13,13 @@
 
 namespace Plugin\ResizeImage42\Tests\Form\Admin;
 
-
 use Eccube\Tests\Form\Type\AbstractTypeTestCase;
 use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\ConfigType;
 
 class ConfigTypeTest extends AbstractTypeTestCase
 {
     /**
-     * @var \Symfony\Component\Form\FormInterface
+     * @var FormInterface
      */
     protected $form;
 
@@ -28,7 +28,7 @@ class ConfigTypeTest extends AbstractTypeTestCase
      */
     protected $formData = [
         'enabled' => true,
-        'cache_control' => 86400
+        'cache_control' => 86400,
     ];
 
     protected function setUp(): void
@@ -37,7 +37,7 @@ class ConfigTypeTest extends AbstractTypeTestCase
 
         $this->form = $this->formFactory
             ->createBuilder(ConfigType::class, null, [
-                'csrf_protection' => false
+                'csrf_protection' => false,
             ])
             ->getForm();
 

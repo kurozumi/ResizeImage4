@@ -2,8 +2,6 @@ name: PHPStan
 on: [workflow_dispatch, pull_request]
 env:
   PLUGIN_CODE: ResizeImage42
-  PLUGIN_BRANCH: 4.2
-
 jobs:
   phpstan:
     name: PHPStan
@@ -11,49 +9,45 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        eccube-versions: ['4.2']
-        php-versions: [ '7.4', '8.0', '8.1' ]
+        eccube-versions: ['4.2', '4.3']
+        php-versions: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+        exclude:
+          - eccube-versions: 4.2
+            php-versions: 8.2
+          - eccube-versions: 4.2
+            php-versions: 8.3
+          - eccube-versions: 4.3
+            php-versions: 7.4
+          - eccube-versions: 4.3
+            php-versions: 8.0
 
     steps:
-      - name: Checkout EC-CUBE
-        uses: actions/checkout@v2
-        with:
-          repository: EC-CUBE/ec-cube
-          ref: ${{ matrix.eccube-versions }}
-
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, iconv, mysql, intl
+          extensions: mbstring, xml, ctype, iconv, mysql, intl, :xdebug
           tools: composer:v2
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
+      - name: Checkout EC-CUBE
+        uses: actions/checkout@v4
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          # Use composer.json for key, if composer.lock is not committed.
-          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          repository: EC-CUBE/ec-cube
+          ref: ${{ matrix.eccube-versions }}
 
-      - name: Install Composer dependencies
+      - name: composer install
         run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
-          composer req liip/imagine-bundle
-          composer req aws/aws-sdk-php
+          composer require liip/imagine-bundle
+          composer require aws/aws-sdk-php
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: app/Plugin/${{ env.PLUGIN_CODE }}
-          ref: ${{ env.PLUGIN_BRANCH }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: PHPStan
         run: |
           composer require phpstan/phpstan --dev
-          vendor/bin/phpstan analyze app/Plugin/${{ github.event.repository.name }} -c "app/Plugin/${{ github.event.repository.name }}/phpstan.neon" --error-format=github
+          ./vendor/bin/phpstan analyze app/Plugin/${{ env.PLUGIN_CODE }} -c "app/Plugin/${{ env.PLUGIN_CODE }}/phpstan.neon" --error-format=github

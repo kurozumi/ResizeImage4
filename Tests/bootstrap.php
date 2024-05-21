@@ -11,6 +11,11 @@
  * file that was distributed with this source code.
  */
 
-return [
-    Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
-];
+$loader = require __DIR__.'/../../../../vendor/autoload.php';
+
+$envFile = __DIR__.'/../../../../.env';
+if (file_exists($envFile)) {
+    (new Symfony\Component\Dotenv\Dotenv())
+        ->usePutenv()
+        ->bootEnv($envFile);
+}

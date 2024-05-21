@@ -1,5 +1,7 @@
 name: E2E test for EC-CUBE4 Plugin
 on: [workflow_dispatch, pull_request]
+env:
+  PLUGIN_CODE: ResizeImage42
 jobs:
   selenium:
     name: Selenium
@@ -7,61 +9,49 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        eccube-versions: [ '4.0','4.1' ]
+        eccube-versions: ['4.2', '4.3']
+        php-versions: [ '7.4', '8.0', '8.1', '8.2', '8.3' ]
+        exclude:
+          - eccube-versions: 4.2
+            php-versions: 8.2
+          - eccube-versions: 4.2
+            php-versions: 8.3
+          - eccube-versions: 4.3
+            php-versions: 7.4
+          - eccube-versions: 4.3
+            php-versions: 8.0
 
     steps:
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, mysql, intl, :xdebug
+          tools: composer:v2
+
       - name: Checkout EC-CUBE
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: EC-CUBE/ec-cube
           ref: ${{ matrix.eccube-versions }}
 
-      - name: Setup PHP, with composer and extensions for EC-CUBE4.0
-        if: matrix.eccube-versions == '4.0'
-        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:v1
-
-      - name: Setup PHP, with composer and extensions
-        if: matrix.eccube-versions != '4.0'
-        uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
-        with:
-          php-version: 7.4
-          extensions: mbstring, xml, ctype, iconv, mysql, intl
-          tools: composer:v2
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          # Use composer.json for key, if composer.lock is not committed.
-          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install Composer dependencies
-        run : |
+      - name: composer install
+        run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
           composer require liip/imagine-bundle
-          composer require aws/aws-sdk-php:^3.0
+          composer require aws/aws-sdk-php
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          path: app/Plugin/${{ github.event.repository.name }}
+          path: app/Plugin/${{ env.PLUGIN_CODE }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup EC-CUBE and Plugin
         run: |
           bin/console e:i
-          bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
-          bin/console cache:clear --no-warmup
-          bin/console eccube:plugin:enable --code ${{ github.event.repository.name }}
+          bin/console eccube:plugin:install --code ${{ env.PLUGIN_CODE }}
+          bin/console eccube:plugin:enable --code ${{ env.PLUGIN_CODE }}
 
       - name: Start PHP Development Server
         run: php -S localhost:8000 &
@@ -73,11 +63,11 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          cd app/Plugin/${{ github.event.repository.name }}
+          cd app/Plugin/${{ env.PLUGIN_CODE }}
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: E2E Test
         run: |
-          cd app/Plugin/${{ github.event.repository.name }}/selenium
+          cd app/Plugin/${{ env.PLUGIN_CODE }}/selenium
           python -m unittest discover -v

@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -12,14 +13,14 @@
 
 namespace Plugin\ResizeImage42\Tests\Form\Admin;
 
-
 use Eccube\Tests\Form\Type\AbstractTypeTestCase;
 use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\BucketType;
+use Symfony\Component\Form\FormInterface;
 
 class BucketTypeTest extends AbstractTypeTestCase
 {
     /**
-     * @var \Symfony\Component\Form\FormInterface
+     * @var FormInterface
      */
     protected $form;
 
@@ -27,7 +28,7 @@ class BucketTypeTest extends AbstractTypeTestCase
      * @var array
      */
     protected $formData = [
-        'bucket' => 'dummy'
+        'bucket' => 'dummy',
     ];
 
     protected function setUp(): void
@@ -37,7 +38,7 @@ class BucketTypeTest extends AbstractTypeTestCase
         $this->form = $this->formFactory
             ->createBuilder(BucketType::class, null, [
                 'csrf_protection' => false,
-                'buckets' => ['dummy' => 'dummy']
+                'buckets' => ['dummy' => 'dummy'],
             ])
             ->getForm();
 

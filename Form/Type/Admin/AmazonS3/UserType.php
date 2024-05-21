@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -12,7 +13,6 @@
 
 namespace Plugin\ResizeImage42\Form\Type\Admin\AmazonS3;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,23 +20,29 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     *
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('access_key_id', TextType::class, [
                 'constraints' => [
-                    new NotBlank()
-                ]
+                    new NotBlank(),
+                ],
             ])
             ->add('secret_access_key', TextType::class, [
                 'constraints' => [
-                    new NotBlank()
-                ]
+                    new NotBlank(),
+                ],
             ])
             ->add('region', TextType::class, [
                 'constraints' => [
-                    new NotBlank()
-                ]
+                    new NotBlank(),
+                ],
             ]);
     }
 }

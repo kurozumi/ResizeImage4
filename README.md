@@ -1,6 +1,4 @@
-# 画像リサイズプラグイン for EC-CUBE4.2
-
-本プラグインの利用には EC-CUBE 4.0.5 以上へのアップデートが必要になります。
+# 画像リサイズプラグイン
 
 カスタマイズ、または他社プラグインとの競合による動作不良つきましてはサポート対象外です。
 
@@ -37,14 +35,9 @@
 
 ```
 composer require liip/imagine-bundle
+composer require aws/aws-sdk-php
 ```
 
 ## AWS 3Sを利用
-
-独自プラグインでインストールしている場合、以下のライブラリをインストールしてください。
-
-```
-composer require aws/aws-sdk-php
-```
 
 管理画面＞画像リサイズ管理＞Amazon S3連携設定で必要な情報を設定して有効化ください。

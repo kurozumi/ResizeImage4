@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -12,7 +13,6 @@
 
 namespace Plugin\ResizeImage42\Form\Type\Admin\AmazonS3;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,15 +20,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BucketType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     *
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('bucket', ChoiceType::class, [
-                'choices' => $options['buckets']
+                'choices' => $options['buckets'],
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     *
+     * @return void
+     */
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('buckets');
         $resolver->setAllowedTypes('buckets', 'array');
