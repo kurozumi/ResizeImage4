@@ -37,10 +37,9 @@ jobs:
           tools: composer:v2
 
       - name: Checkout
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         uses: actions/checkout@v2
         with:
-          path: app/Plugin/${{ github.event.repository.name }}
+          path: ${{ env.WORKING_DIRECTORY }}/app/Plugin/${{ github.event.repository.name }}
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Initialize Composer
