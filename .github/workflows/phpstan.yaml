@@ -23,18 +23,18 @@ jobs:
             php-versions: 8.0
 
     steps:
-      - name: Checkout EC-CUBE
-        uses: actions/checkout@v4
-        with:
-          repository: EC-CUBE/ec-cube
-          ref: ${{ matrix.eccube-versions }}
-
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, iconv, mysql, intl, :xdebug
           tools: composer:v2
+
+      - name: Checkout EC-CUBE
+        uses: actions/checkout@v4
+        with:
+          repository: EC-CUBE/ec-cube
+          ref: ${{ matrix.eccube-versions }}
 
       - name: composer install
         run: |
@@ -43,7 +43,7 @@ jobs:
           composer require aws/aws-sdk-php
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: app/Plugin/${{ env.PLUGIN_CODE }}
           ref: ${{ github.event.pull_request.head.sha }}

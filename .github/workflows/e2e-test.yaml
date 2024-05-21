@@ -1,7 +1,5 @@
 name: E2E test for EC-CUBE4 Plugin
 on: [workflow_dispatch, pull_request]
-env:
-  WORKING_DIRECTORY: 'ec-cube'
 jobs:
   selenium:
     name: Selenium
@@ -22,12 +20,6 @@ jobs:
             php-versions: 8.0
 
     steps:
-      - name: Checkout EC-CUBE
-        uses: actions/checkout@v4
-        with:
-          repository: EC-CUBE/ec-cube
-          ref: ${{ matrix.eccube-versions }}
-
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master #https://github.com/shivammathur/setup-php
         with:
@@ -35,17 +27,23 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, mysql, intl, :xdebug
           tools: composer:v2
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout EC-CUBE
+        uses: actions/checkout@v4
         with:
-          path: app/Plugin/${{ github.event.repository.name }}
-          ref: ${{ github.event.pull_request.head.sha }}
+          repository: EC-CUBE/ec-cube
+          ref: ${{ matrix.eccube-versions }}
 
       - name: composer install
         run: |
           composer install --no-progress --prefer-dist --optimize-autoloader
           composer require liip/imagine-bundle
           composer require aws/aws-sdk-php
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: app/Plugin/${{ github.event.repository.name }}
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Setup EC-CUBE and Plugin
         run: |
