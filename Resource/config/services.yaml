@@ -1,5 +1,5 @@
 #
-# This file is part of ResizeImage42
+# This file is part of ResizeImage
 #
 # Copyright(c) Akira Kurozumi <info@a-zumi.net>
 #
@@ -47,13 +47,12 @@ liip_imagine:
 
     # the name of the "filter set"
     resize:
-      # cache: aws_s3_resolver
+    # cache: aws_s3_resolver
 
 
 services:
   Aws\S3\S3Client:
-    factory: ['Plugin\ResizeImage42\Factory\AmazonS3ClientFactory', 'create']
+    factory: [ 'Plugin\ResizeImage42\Factory\AmazonS3ClientFactory', 'create' ]
     arguments:
-      -
-        version: '%aws_s3_version%'
+      - version: '%aws_s3_version%'
         region: '%env(AWS_S3_REGION)%'

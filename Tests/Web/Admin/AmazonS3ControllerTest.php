@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -11,7 +12,6 @@
  */
 
 namespace Plugin\ResizeImage42\Tests\Web\Admin;
-
 
 use Eccube\Common\Constant;
 use Eccube\Tests\Web\Admin\AbstractAdminWebTestCase;
@@ -29,18 +29,18 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
 
     public function testアクセスユーザーページで情報を保存したらenvファイルに追記されるか()
     {
-        $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
+        $envFile = static::getContainer()->getParameter('kernel.project_dir').'/.env';
 
         $fs = new Filesystem();
-        $fs->copy($envFile, $envFile . '.backup');
+        $fs->copy($envFile, $envFile.'.backup');
 
         $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3_user'), [
             'user' => [
                 'access_key_id' => 'dummy',
                 'secret_access_key' => 'dummy',
                 'region' => 'dummy',
-                Constant::TOKEN_NAME => 'dummy'
-            ]
+                Constant::TOKEN_NAME => 'dummy',
+            ],
         ]);
 
         $env = file_get_contents($envFile);
@@ -52,15 +52,15 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
         ];
 
         foreach ($keys as $key) {
-            $pattern = '/^(' . $key . ')=(.*)/m';
+            $pattern = '/^('.$key.')=(.*)/m';
             if (preg_match($pattern, $env, $matches)) {
                 self::assertEquals('dummy', $matches[2]);
             } else {
-                self::fail(sprintf("%sが見つかりませんでした。", $key));
+                self::fail(sprintf('%sが見つかりませんでした。', $key));
             }
         }
 
-        $fs->rename($envFile . '.backup', $envFile, true);
+        $fs->rename($envFile.'.backup', $envFile, true);
     }
 
     public function test設定ページで情報を保存したらenvファイルに追記されるか()
@@ -70,35 +70,35 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
         putenv('AWS_S3_REGION=dummy');
         putenv('AWS_S3_BUCKET=dummy');
 
-        $envFile = self::$container->getParameter('kernel.project_dir') . '/.env';
+        $envFile = static::getContainer()->getParameter('kernel.project_dir').'/.env';
 
         $fs = new Filesystem();
-        $fs->copy($envFile, $envFile . '.backup');
+        $fs->copy($envFile, $envFile.'.backup');
 
         $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3'), [
             'config' => [
                 'enabled' => true,
                 'cache_control' => 1,
-                Constant::TOKEN_NAME => 'dummy'
-            ]
+                Constant::TOKEN_NAME => 'dummy',
+            ],
         ]);
 
         $env = file_get_contents($envFile);
 
         $keys = [
             'AWS_S3_ENABLED',
-            'AWS_S3_CACHE_CONTROL'
+            'AWS_S3_CACHE_CONTROL',
         ];
 
         foreach ($keys as $key) {
-            $pattern = '/^(' . $key . ')=(.*)/m';
+            $pattern = '/^('.$key.')=(.*)/m';
             if (preg_match($pattern, $env, $matches)) {
                 self::assertEquals(1, $matches[2]);
             } else {
-                self::fail(sprintf("%sが見つかりませんでした。", $key));
+                self::fail(sprintf('%sが見つかりませんでした。', $key));
             }
         }
 
-        $fs->rename($envFile . '.backup', $envFile, true);
+        $fs->rename($envFile.'.backup', $envFile, true);
     }
 }

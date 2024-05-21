@@ -1,0 +1,23 @@
+runs:
+  using: "Composite"
+  steps:
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+      shell: bash
+
+    - uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: composer install
+      working-directory: ${{ env.WORKING_DIRECTORY }}
+      run: |
+        composer install --no-progress --prefer-dist --optimize-autoloader
+        composer require liip/imagine-bundle
+        composer require aws/aws-sdk-php
+      shell: bash

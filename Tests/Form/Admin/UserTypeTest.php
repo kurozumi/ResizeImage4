@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -11,7 +12,6 @@
  */
 
 namespace Plugin\ResizeImage42\Tests\Form\Admin;
-
 
 use Eccube\Tests\Form\Type\AbstractTypeTestCase;
 use Plugin\ResizeImage42\Form\Type\Admin\AmazonS3\UserType;
@@ -32,7 +32,7 @@ class UserTypeTest extends AbstractTypeTestCase
 
         $this->form = $this->formFactory
             ->createBuilder(UserType::class, null, [
-                'csrf_protection' => false
+                'csrf_protection' => false,
             ])
             ->getForm();
     }

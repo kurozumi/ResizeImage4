@@ -1,6 +1,7 @@
 <?php
-/**
- * This file is part of ResizeImage42
+
+/*
+ * This file is part of ResizeImage
  *
  * Copyright(c) Akira Kurozumi <info@a-zumi.net>
  *
@@ -11,7 +12,6 @@
  */
 
 namespace Plugin\ResizeImage42\Form\Type\Admin\AmazonS3;
-
 
 use Eccube\Form\Type\ToggleSwitchType;
 use Symfony\Component\Form\AbstractType;
@@ -24,16 +24,22 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class ConfigType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     *
+     * @return void
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('enabled', ToggleSwitchType::class)
             ->add('cache_control', NumberType::class, [
                 'constraints' => [
                     new GreaterThanOrEqual([
-                        'value' => 1
-                    ])
-                ]
+                        'value' => 1,
+                    ]),
+                ],
             ]);
 
         $builder
@@ -49,9 +55,9 @@ class ConfigType extends AbstractType
                 }
 
                 if (
-                    !getenv('AWS_ACCESS_KEY_ID') ||
-                    !getenv('AWS_SECRET_ACCESS_KEY') ||
-                    !getenv('AWS_S3_REGION')
+                    !getenv('AWS_ACCESS_KEY_ID')
+                    || !getenv('AWS_SECRET_ACCESS_KEY')
+                    || !getenv('AWS_S3_REGION')
                 ) {
                     $form->addError(new FormError('AWS アクセスキーが設定されていないので有効化できません。'));
                 }
