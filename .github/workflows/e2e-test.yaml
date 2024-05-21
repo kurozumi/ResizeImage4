@@ -63,11 +63,11 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          cd app/Plugin/${{ github.event.repository.name }}
+          cd app/Plugin/${{ env.PLUGIN_CODE }}
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: E2E Test
         run: |
-          cd app/Plugin/${{ github.event.repository.name }}/selenium
+          cd app/Plugin/${{ env.PLUGIN_CODE }}/selenium
           python -m unittest discover -v
