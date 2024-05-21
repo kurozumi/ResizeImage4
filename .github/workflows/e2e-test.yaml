@@ -50,8 +50,8 @@ jobs:
       - name: Setup EC-CUBE and Plugin
         run: |
           bin/console e:i
-          bin/console eccube:plugin:install --code ${{ github.event.repository.name }}
-          bin/console eccube:plugin:enable --code ${{ github.event.repository.name }}
+          bin/console eccube:plugin:install --code ${{ env.PLUGIN_CODE }}
+          bin/console eccube:plugin:enable --code ${{ env.PLUGIN_CODE }}
 
       - name: Start PHP Development Server
         run: php -S localhost:8000 &
