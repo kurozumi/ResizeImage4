@@ -16,8 +16,5 @@ runs:
 
     - name: composer install
       working-directory: ${{ env.WORKING_DIRECTORY }}
-      run: |
-        composer install --no-progress --prefer-dist --optimize-autoloader
-        composer require liip/imagine-bundle
-        composer require aws/aws-sdk-php
+      run: composer install --no-progress --prefer-dist --optimize-autoloader
       shell: bash

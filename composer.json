@@ -1,6 +1,6 @@
 {
     "name": "ec-cube/resizeimage42",
-    "version": "4.2.0",
+    "version": "4.3.0",
     "description": "画像リサイズプラグイン for EC-CUBE4.2",
     "type": "eccube-plugin",
     "require": {
