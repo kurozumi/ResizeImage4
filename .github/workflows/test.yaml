@@ -117,7 +117,6 @@ jobs:
           bin/console eccube:composer:require ${{ env.PACKAGE_NAME }}
           bin/console cache:clear --no-warmup
           bin/console eccube:plugin:enable --code ${{ env.PLUGIN_CODE }}
-          bin/console cache:clear --no-warmup
         env:
           APP_ENV: ${{ env.APP_ENV }}
           APP_DEBUG: ${{ env.APP_DEBUG }}
@@ -130,7 +129,7 @@ jobs:
       - name: Run PHPUnit
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          bin/console cache:clear --no-warmup
+          rm -r var/cache
           ./vendor/bin/phpunit -c app/Plugin/${{ env.PLUGIN_CODE }}/phpunit.xml.dist app/Plugin/${{ env.PLUGIN_CODE }}/Tests
         env:
           APP_ENV: ${{ env.APP_ENV }}
@@ -142,7 +141,6 @@ jobs:
       - name: Update Plugin
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          bin/console cache:clear --no-warmup
           bin/console eccube:plugin:update ${{ env.PLUGIN_CODE }}
         env:
           APP_ENV: ${{ env.APP_ENV }}
@@ -154,8 +152,8 @@ jobs:
       - name: Uninstall Plugin
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          bin/console cache:clear --no-warmup
-          bin/console eccube:plugin:uninstall --code=${{ env.PLUGIN_CODE }}
+          bin/console eccube:plugin:disable --code ${{ env.PLUGIN_CODE }}
+          bin/console eccube:composer:remove ${{ env.PACKAGE_NAME }}
         env:
           APP_ENV: ${{ env.APP_ENV }}
           APP_DEBUG: ${{ env.APP_DEBUG }}
