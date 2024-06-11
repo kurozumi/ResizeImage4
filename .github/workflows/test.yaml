@@ -70,7 +70,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: kurozumi/eccube-ci-action@main
+      - uses: kurozumi/eccube-ci-action@v1
         with:
           plugin-code: 'ResizeImage42'
           plugin-package-name: 'ec-cube/resizeimage42'
