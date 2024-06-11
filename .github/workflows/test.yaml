@@ -1,11 +1,10 @@
 name: CI/CD for EC-CUBE4 Plugin
 on: [ workflow_dispatch, pull_request ]
+
 env:
   PLUGIN_CODE: ResizeImage42
-  PACKAGE_NAME: 'ec-cube/resizeimage42'
-  WORKING_DIRECTORY: 'ec-cube'
-  APP_ENV: 'test'
-  APP_DEBUG: 0
+  PLUGIN_PACKAGE_NAME: 'ec-cube/resizeimage42'
+
 jobs:
   phpunit:
     name: PHPUnit
@@ -72,8 +71,8 @@ jobs:
 
       - uses: kurozumi/eccube-ci-action@v1
         with:
-          plugin-code: 'ResizeImage42'
-          plugin-package-name: 'ec-cube/resizeimage42'
+          plugin-code: ${{ env.PLUGIN_CODE }}
+          plugin-package-name: ${{ env.PLUGIN_PACKAGE_NAME }}
           eccube-versions: ${{ matrix.eccube-versions }}
           php-versions: ${{ matrix.php-versions }}
           database-url: ${{ matrix.database_url }}
