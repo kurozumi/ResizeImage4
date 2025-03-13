@@ -45,7 +45,7 @@ class AmazonS3Controller extends AbstractController
         $form = $this->createForm(UserType::class, [
             'access_key_id' => getenv('AWS_ACCESS_KEY_ID'),
             'secret_access_key' => getenv('AWS_SECRET_ACCESS_KEY'),
-            'region' => getenv('AWS_S3_REGION') ? getenv('AWS_S3_REGION') : $this->getParameter('aws_s3_region'),
+            'region' => getenv('AWS_S3_REGION') ? getenv('AWS_S3_REGION') : $this->getParameter('amazon.s3.region'),
         ]);
         $form->handleRequest($request);
 
@@ -133,7 +133,7 @@ class AmazonS3Controller extends AbstractController
     {
         $form = $this->createForm(ConfigType::class, [
             'enabled' => (bool) getenv('AWS_S3_ENABLED'),
-            'cache_control' => getenv('AWS_S3_CACHE_CONTROL') ? getenv('AWS_S3_CACHE_CONTROL') : $this->getParameter('aws_s3_cache_control'),
+            'cache_control' => getenv('AWS_S3_CACHE_CONTROL') ? getenv('AWS_S3_CACHE_CONTROL') : $this->getParameter('amazon.s3.cache_control'),
         ]);
         $form->handleRequest($request);
 

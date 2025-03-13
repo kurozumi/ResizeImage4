@@ -75,3 +75,9 @@ services:
       - "%amazon.s3.bucket%"
     tags:
       - { name: "liip_imagine.cache.resolver", resolver: "aws_s3_resolver" }
+
+  Aws\S3\S3Client:
+    factory: [ 'Plugin\ResizeImage42\Factory\AmazonS3ClientFactory', 'create' ]
+    arguments:
+      - version: '%amazon.s3.version%'
+        region: '%amazon.s3.region%'
