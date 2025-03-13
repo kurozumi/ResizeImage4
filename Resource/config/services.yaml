@@ -10,14 +10,19 @@
 #
 
 parameters:
-  env(AWS_S3_ENABLED): 0
-  env(AWS_S3_BUCKET): ''
+  env(AWS_ACCESS_KEY_ID): ''
+  env(AWS_SECRET_ACCESS_KEY): ''
   env(AWS_S3_REGION): 'ap-northeast-1'
+  env(AWS_S3_BUCKET): ''
+  env(AWS_S3_ENABLED): 0
   env(AWS_S3_CACHE_CONTROL): '86400'
 
-  aws_s3_region: '%env(AWS_S3_REGION)%'
-  aws_s3_cache_control: '%env(AWS_S3_CACHE_CONTROL)%'
-  aws_s3_version: '2006-03-01'
+  amazon.s3.key: '%env(AWS_ACCESS_KEY_ID)%'
+  amazon.s3.secret: '%env(AWS_SECRET_ACCESS_KEY)%'
+  amazon.s3.bucket: '%env(AWS_S3_BUCKET)%'
+  amazon.s3.region: '%env(AWS_S3_REGION)%'
+  amazon.s3.version: '2006-03-01'
+  amazon.s3.cache_control: '%env(AWS_S3_CACHE_CONTROL)%'
 
 liip_imagine:
   resolvers:
@@ -28,14 +33,17 @@ liip_imagine:
 
     aws_s3_resolver:
       aws_s3:
-        bucket: '%env(AWS_S3_BUCKET)%'
         client_config:
-          version: '%aws_s3_version%'
-          region: '%env(AWS_S3_REGION)%'
+          credentials:
+            key: '%amazon.s3.key%'
+            secret: '%amazon.s3.secret%'
+          region: '%amazon.s3.region%'
+          version: '%amazon.s3.version%'
+        bucket: '%amazon.s3.bucket%'
         get_options:
           Scheme: https
         put_options:
-          CacheControl: "max-age=%env(AWS_S3_CACHE_CONTROL)%"
+          CacheControl: "max-age=%amazon.s3.cache_control%"
 
   loaders:
     default:
@@ -51,8 +59,19 @@ liip_imagine:
 
 
 services:
-  Aws\S3\S3Client:
-    factory: [ 'Plugin\ResizeImage42\Factory\AmazonS3ClientFactory', 'create' ]
+  plugin.resize_image.amazon_s3:
+    class: Aws\S3\S3Client
+    factory: [Aws\S3\S3Client, factory]
     arguments:
-      - version: '%aws_s3_version%'
-        region: '%env(AWS_S3_REGION)%'
+        -
+          credentials: { key: "%amazon.s3.key%", secret: "%amazon.s3.secret%" }
+          version: '%amazon.s3.version%'
+          region: '%amazon.s3.region%'
+
+  plugin.resize_image.imagine.cache.resolver.aws_s3_resolver:
+    class: Liip\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
+    arguments:
+      - "@plugin.resize_image.amazon_s3"
+      - "%amazon.s3.bucket%"
+    tags:
+      - { name: "liip_imagine.cache.resolver", resolver: "aws_s3_resolver" }

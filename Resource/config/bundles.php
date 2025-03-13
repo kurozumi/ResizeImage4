@@ -13,4 +13,5 @@
 
 return [
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
+    Plugin\ResizeImage42\Bundle\ResizeImageBundle::class => ['all' => true],
 ];
