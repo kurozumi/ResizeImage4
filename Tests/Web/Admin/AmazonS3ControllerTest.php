@@ -16,24 +16,44 @@ namespace Plugin\ResizeImage42\Tests\Web\Admin;
 use Eccube\Common\Constant;
 use Eccube\Tests\Web\Admin\AbstractAdminWebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use function PHPUnit\Framework\assertTrue;
 
 class AmazonS3ControllerTest extends AbstractAdminWebTestCase
 {
+    /**
+     * @var string
+     */
+    protected $envFile;
+
+    /**
+     * @var string
+     */
+    protected $env;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $member = $this->createMember();
         $this->loginTo($member);
+
+        $this->envFile = static::getContainer()->getParameter('kernel.project_dir').'/.env';
+        if (file_exists($this->envFile)) {
+            $this->env = file_get_contents($this->envFile);
+        }
+    }
+
+    protected function tearDown(): void
+    {
+        if ($this->env) {
+            file_put_contents($this->envFile, $this->env);
+        }
+
+        parent::tearDown();
     }
 
     public function testアクセスユーザーページで情報を保存したらenvファイルに追記されるか()
     {
-        $envFile = static::getContainer()->getParameter('kernel.project_dir').'/.env';
-
-        $fs = new Filesystem();
-        $fs->copy($envFile, $envFile.'.backup');
-
         $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3_user'), [
             'user' => [
                 'access_key_id' => 'dummy',
@@ -42,8 +62,7 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
                 Constant::TOKEN_NAME => 'dummy',
             ],
         ]);
-
-        $env = file_get_contents($envFile);
+        self::assertTrue($this->client->getResponse()->isRedirection());
 
         $keys = [
             'AWS_ACCESS_KEY_ID',
@@ -53,14 +72,12 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
 
         foreach ($keys as $key) {
             $pattern = '/^('.$key.')=(.*)/m';
-            if (preg_match($pattern, $env, $matches)) {
+            if (preg_match($pattern, file_get_contents($this->envFile), $matches)) {
                 self::assertEquals('dummy', $matches[2]);
             } else {
                 self::fail(sprintf('%sが見つかりませんでした。', $key));
             }
         }
-
-        $fs->rename($envFile.'.backup', $envFile, true);
     }
 
     public function test設定ページで情報を保存したらenvファイルに追記されるか()
@@ -70,11 +87,6 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
         putenv('AWS_S3_REGION=dummy');
         putenv('AWS_S3_BUCKET=dummy');
 
-        $envFile = static::getContainer()->getParameter('kernel.project_dir').'/.env';
-
-        $fs = new Filesystem();
-        $fs->copy($envFile, $envFile.'.backup');
-
         $this->client->request('POST', $this->generateUrl('admin_resize_image_amazon_s3'), [
             'config' => [
                 'enabled' => true,
@@ -82,23 +94,21 @@ class AmazonS3ControllerTest extends AbstractAdminWebTestCase
                 Constant::TOKEN_NAME => 'dummy',
             ],
         ]);
-
-        $env = file_get_contents($envFile);
+        self::assertTrue($this->client->getResponse()->isRedirection());
 
         $keys = [
             'AWS_S3_ENABLED',
             'AWS_S3_CACHE_CONTROL',
         ];
 
+
         foreach ($keys as $key) {
             $pattern = '/^('.$key.')=(.*)/m';
-            if (preg_match($pattern, $env, $matches)) {
+            if (preg_match($pattern, file_get_contents($this->envFile), $matches)) {
                 self::assertEquals(1, $matches[2]);
             } else {
                 self::fail(sprintf('%sが見つかりませんでした。', $key));
             }
         }
-
-        $fs->rename($envFile.'.backup', $envFile, true);
     }
 }
