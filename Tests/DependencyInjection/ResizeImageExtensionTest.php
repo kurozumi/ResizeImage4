@@ -14,33 +14,65 @@
 namespace Plugin\ResizeImage42\Tests\DependencyInjection;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Plugin\ResizeImage42\DependencyInjection\ResizeImageExtension;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ResizeImageExtensionTest extends KernelTestCase
 {
-    private ResizeImageExtension $extension;
-
-    public function setUp(): void
+    public function testIsConnectedReturnsTrueIfTableExists()
     {
-        parent::setUp();
-        $this->extension = new ResizeImageExtension();
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager->method('listTableNames')->willReturn(['dtb_plugin']);
+
+        $conn = $this->createMock(Connection::class);
+        $conn->method('createSchemaManager')->willReturn($schemaManager);
+
+        $this->assertTrue($this->invokeMethod('isConnected', [$conn]));
     }
 
-    public function testPrependSkipsWhenNotConnected()
+    public function testIsConnectedReturnsFalseIfException()
+    {
+        $conn = $this->createMock(Connection::class);
+        $conn->method('createSchemaManager')->willThrowException(new \Exception());
+
+        $this->assertFalse($this->invokeMethod('isConnected', [$conn]));
+    }
+
+    public function testIsPluginEnabledReturnsTrue()
+    {
+        $stmt = $this->createMock(Result::class);
+        $stmt->method('fetchOne')->willReturn(1);
+
+        $conn = $this->createMock(Connection::class);
+        $conn->method('executeQuery')->willReturn($stmt);
+
+        $this->assertTrue($this->invokeMethod('isPluginEnabled', [$conn]));
+    }
+
+    public function testIsPluginEnabledReturnsFalse()
+    {
+        $stmt = $this->createMock(Result::class);
+        $stmt->method('fetchOne')->willReturn(0);
+
+        $conn = $this->createMock(Connection::class);
+        $conn->method('executeQuery')->willReturn($stmt);
+
+        $this->assertFalse($this->invokeMethod('isPluginEnabled', [$conn]));
+    }
+
+    public function testPrependDoesNotRunIfNotConnected()
     {
         $container = $this->createMock(ContainerBuilder::class);
         $extension = $this->getMockBuilder(ResizeImageExtension::class)
             ->onlyMethods(['getConnection', 'isConnected'])
             ->getMock();
 
-        $mockCon = $this->createMock(Connection::class);
-
         $extension->expects($this->once())
             ->method('getConnection')
-            ->willReturn($mockCon);
-
+            ->willReturn($this->createMock(Connection::class));
         $extension->expects($this->once())
             ->method('isConnected')
             ->willReturn(false);
@@ -51,23 +83,36 @@ class ResizeImageExtensionTest extends KernelTestCase
         $extension->prepend($container);
     }
 
-    public function testPrependSkipsWhenPluginDisabled()
+    public function testPrependDoesNotRunIfPluginDisabled()
     {
         $container = $this->createMock(ContainerBuilder::class);
         $extension = $this->getMockBuilder(ResizeImageExtension::class)
             ->onlyMethods(['getConnection', 'isConnected', 'isPluginEnabled'])
             ->getMock();
 
-        $mockCon = $this->createMock(Connection::class);
+        $conn = $this->createMock(Connection::class);
 
-        $extension->method('getConnection')->willReturn($mockCon);
-        $extension->method('isConnected')->willReturn(true);
-        $extension->method('isPluginEnabled')->willReturn(false);
+        $extension->expects($this->once())
+            ->method('getConnection')->willReturn($conn);
+        $extension->expects($this->once())
+            ->method('isConnected')->willReturn(true);
+        $extension->expects($this->once())
+            ->method('isPluginEnabled')->willReturn(false);
 
         $container->expects($this->never())
             ->method('getExtensionConfig');
 
         $extension->prepend($container);
+    }
+
+    protected function invokeMethod(string $methodName, array $args = [])
+    {
+        $object = new ResizeImageExtension();
+        $reflection = new \ReflectionClass($object);
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $args);
     }
 
     public function testPrependModifiesLiipImagineConfig()
@@ -84,8 +129,6 @@ class ResizeImageExtensionTest extends KernelTestCase
         $extension->method('isPluginEnabled')->willReturn(true);
 
         $container = $this->getMockBuilder(ContainerBuilder::class)
-            ->onlyMethods(['getExtensionConfig', 'resolveEnvPlaceholders', 'getParameter'])
-            ->disableOriginalConstructor()
             ->getMock();
 
         $extensionConfigs = [
