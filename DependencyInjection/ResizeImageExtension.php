@@ -97,14 +97,6 @@ class ResizeImageExtension extends Extension implements PrependExtensionInterfac
     protected function isConnected(Connection $conn): bool
     {
         try {
-            if (!$conn->executeQuery('select 1')) {
-                return false;
-            }
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        try {
             $tableNames = $conn->createSchemaManager()->listTableNames();
         } catch (\Exception $e) {
             return false;
