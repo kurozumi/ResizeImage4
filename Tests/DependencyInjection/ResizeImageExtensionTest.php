@@ -129,6 +129,7 @@ class ResizeImageExtensionTest extends KernelTestCase
         $extension->method('isPluginEnabled')->willReturn(true);
 
         $container = $this->getMockBuilder(ContainerBuilder::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
         $extensionConfigs = [
